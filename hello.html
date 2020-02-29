@@ -1,0 +1,412 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru-RU">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Моя шпаргалка по работе с Git | Записки программиста</title>
+
+<link rel="shortcut icon" href="https://eax.me/favicon.ico" type="image/x-icon" />
+<meta name="google-site-verification" content="mI_RLXJwm4YMPzdIMR6z3SZiGCHnxxQCZPKAYBimygM" />
+<meta name='yandex-verification' content='5944100ee6c98f3d' />
+  <meta name="description" content="Некоторое время назад я открыл для себя Git. И знаете, я проникся. То есть, по-настоящему проникся. Теперь я использую Git не только на работе (где я с ним, соб" />
+
+<link rel="stylesheet" href="https://eax.me/wp-content/themes/eaxme/style.css?20200112" type="text/css" media="screen" />
+
+<link rel="alternate" type="application/rss+xml" title="Записки программиста - RSS Feed" href="https://eax.me/feed/" />
+
+<link rel="stylesheet" href="https://eax.me/wp-content/plugins/codecolorer/codecolorer.css" type="text/css" media="screen" />
+<link rel='canonical' href='https://eax.me/git-commands/' />
+</head>
+<body>
+
+<script type="text/javascript"><!--
+new Image().src = "https://coun"+"ter.yad"+"ro.ru/hit?r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random();//--></script>
+
+<div id="page">
+
+<!-- header begin -->
+
+<div id="header">
+    <div id="header_title">
+        <h1><a href="https://eax.me/">Записки программиста</a></h1>
+    </div>
+    <div id="header_desc">
+      <strong>Блог о программировании, а также электронике, радио, и всяком таком</strong>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<!-- header end -->
+
+<div id="body">
+<div id="body_top">
+	<div id="body_left">
+    	<div id="body_left_content">
+
+
+	<div id="content" class="narrowcolumn">
+
+			
+			<div class="post" id="post-6003">
+                <div class="post-top">
+                    <div class="post-title">
+                        <div class="left">
+                          <h2>Моя шпаргалка по работе с Git</h2>
+                          <div style="float: left;">
+                          <p>28 декабря 2011</p>
+                          </div>
+                          <div style="float: right;"></div>
+                          <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+				<div class="entry">
+					<p>Некоторое время назад я открыл для себя Git. И знаете, я проникся. То есть, <span style="white-space: nowrap;">по-настоящему</span> проникся. Теперь я использую Git не только на работе (где я с ним, собственно, познакомился), но и для своих проектиков, которые я стал хранить на BitBucket. Последний начал <a href="https://bitbucket.org/blog/bitbucket-now-rocks-git">поддерживать Git относительно недавно</a>. В отличие от GitHub, BitBucket позволяет совершенно бесплатно создавать как открытые, так и закрытые репозитории. <span id="more-6003"></span></p>
+<h3>В чем состоит отличие Git от Subversion?</h3>
+<p>Главное отличие Git от <a href="/svn-commands/">Subversion</a> заключается в том, что Git &#8212; <em>распределенная</em> система контроля версий. Звучит ужасающе, но на практике это означает очень простую вещь. Каждый разработчик держит у себя на диске отдельный репозиторий. Обратите внимание &#8212; не <em>копию</em> репозитория, не <em>некоторые бранчи</em>, а тупо отдельный и при этом абсолютно полноценный репозиторий.</p>
+<p>Пока мы работаем в рамках своего репозитория, все происходит в точности, как в Subversion. Мы коммитим и откатываем изменения, создаем, мержим и удаляем бранчи, разрешаем конфликты и тд. Помимо этого, предусмотрены команды для работы с репозиториями на удаленных машинах. Например, «git push» означает мерж локальных изменений в удаленный репозиторий, а «git pull» &#8212; наоборот, мерж изменений из удаленного репозитория в локальный. Обмен данными по сети обычно происходит с использованием протокола SSH.</p>
+<p>В результате имеем:</p>
+<ul>
+<li>Git присущи все те же преимущества от использования VCS, что мы получаем в Subversion.</li>
+<li>Git дает нам нормальное шифрование «из коробки», безо всяких танцев с бубнами, как в случае с Subversion.</li>
+<li>Если сервер с &#171;главным&#187; репозиторием, куда пушат свои изменения все разработчики (хотя формально в Git нет никакого &#171;главного&#187; репозитория), вдруг прилег &#8212; ничего страшного. Делаем коммиты в локальный репозиторий и ждем, когда сервер вернется.</li>
+<li>Даже если сервер доступен, все равно удобнее сделать пяток локальных коммитов, а затем отправить их на сервер одним пушем.</li>
+<li>Сервер <em>вообще</em> не нужен. Вы можете использовать Git только локально. И не обязательно для работы с исходниками. Например, можно использовать Git для того, чтобы иметь возможность откатиться к предыдущим версиям файлов (каких-нибудь электронных таблиц) или вернуть случайно удаленные.</li>
+<li>Git не раскидывает по каталогам служебную информацию <span style="white-space: nowrap;">(помните «.svn»?)</span>, вместо этого она хранится только в корне репозитория.</li>
+<li>Git нынче очень моден (хотя это далеко не единственная распределенная система контроля версий, например, есть Mercurial и Darcs), в связи с чем растет число разработчиков, использующих его. Как следствие, используя Git, легче получить помощь на каком-нибудь форуме или собрать команду разработчиков, знакомых с этой VCS.</li>
+<li>Существует множество полезных утилит для работы с Git &#8212; Qgit, gitk, gitweb и другие. &#171;Из коробки&#187; есть импорт и экспорт в/из Subversion/CVS.</li>
+<li>Git поддерживают многие хостинги репозиториев (<a href="https://github.com/">GitHub</a>, <a href="https://bitbucket.org/">BitBucket</a>, <a href="http://sourceforge.net/">SourceForge</a>, <span style="white-space: nowrap;"><a href="http://code.google.com/">Google Code</a>, &#8230;</span>) &#8212; есть из чего выбрать.</li>
+<li>Большой популярностью пользуется GitHub. Используя Git, вы увеличиваете вероятность того, что кто-то захочет безвозмездно написать патч для вашего open source проекта.</li>
+</ul>
+<h3>Пример использования Git</h3>
+<p>Я использовал Git при написании программы из заметки <a href="/haskell-text-gen/">Генерация почти осмысленных текстов на Haskell</a>, сидя под своей любимой FreeBSD. Вот как примерно выглядела моя работа с Git.</p>
+<p>В первую очередь необходимо поставить Git:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer">pkg_add <span class="re5">-r</span> <span class="kw2">git</span></div></div>
+<p>Затем создаем пару ssh ключей, если не создавали ее ранее:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">ssh-keygen</span><br />
+<span class="kw2">cat</span> ~<span class="sy0">/</span>.ssh<span class="sy0">/</span>id_rsa.pub</div></div>
+<p>Заходим на БитБакет, создаем git-репозиторий под новый проект, а в свойствах аккаунта прописываем свой открытый ssh-ключ. Затем клонируем репозиторий:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw3">cd</span> ~<span class="sy0">/</span>projects<span class="sy0">/</span>haskell<br />
+<span class="kw2">git clone</span> <span class="kw2">git</span><span class="sy0">@</span>bitbucket.org:afiskon<span class="sy0">/</span>hs-textgen.git<br />
+<span class="kw3">cd</span> hs-textgen</div></div>
+<p>Делаем какие-то изменения:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw3">echo</span> <span class="kw3">test</span> <span class="sy0">&gt;</span> TODO.TXT</div></div>
+<p>Добавляем новый файл в репозиторий и делаем коммит:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git add</span> TODO.TXT<br />
+<span class="kw2">git commit</span> <span class="re5">-a</span></div></div>
+<p>Поскольку я не указал описание коммита, запускается <a href="/vim-commands/">редактор VIM</a>, с помощью которого я и ввожу описание. Затем я отправляю все сделанные мною изменения на БитБакет:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin</div></div>
+<p>Допустим, теперь я хочу сделать некоторые изменения в проекте, но не уверен, выйдет ли из этого что-то хорошее. В таких случаях создается новая ветка:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> new_feature<br />
+<span class="kw2">git checkout</span> new_feature</div></div>
+<p>Работаем с этой веткой. Если ничего хорошего не вышло, возвращаемся к основной ветке (она же &#171;trunk&#187; или &#171;ствол&#187;):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git checkout</span> master</div></div>
+<p>Если вышло что-то хорошее, мержим ветку в master (о разрешении конфликтов рассказано в следующем параграфе):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git commit</span> <span class="re5">-a</span> <span class="co0"># делаем коммит всех изменений в new_feature</span><br />
+<span class="kw2">git checkout</span> master <span class="co0"># переключаемся на master</span><br />
+<span class="kw2">git merge</span> new_feature <span class="co0"># мержим ветку new_feature</span></div></div>
+<p>Не забываем время от времени отправлять наш код на BitBucket:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin</div></div>
+<p>Если мы правим код с нескольких компьютеров, то перед началом работы не забываем &#171;накатить&#187; в локальный репозиторий последнюю версию кода:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git pull</span> origin</div></div>
+<p>Работа в команде мало чем отличается от описанного выше. Только каждый программист должен работать со своей веткой, чтобы не мешать другим программистам. Одна из классических ошибок при начале работы с Git заключается в <span style="white-space: nowrap;">push&#8217;е</span> <em>всех веток</em>, а не только той, с которой вы работали. Вообще я бы советовал первое время перед выполнением каждого push делать паузу с тем, чтобы подумать, что и куда сейчас уйдет. Для большей безопасности советую при генерации ssh-ключей указать пароль. Тогда каждый запрос пароля со стороны Git будет для вас сигналом &#171;Эй, ты делаешь что-то, что затронет других&#187;.</p>
+<p>Для работы с Git под Windows можно воспользоваться клиентом <a href="https://tortoisegit.org/">TortoiseGit</a>. Если память не подводит, для работы ему нужен <a href="https://gitforwindows.org/">Git for Windows</a>. Для генерации ключей можно воспользоваться утилитой <a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">PuTTyGen</a>. Только не забудьте экспортировать открытый ключ в правильном формате, «Conversions &rarr; Export OpenSSH key».</p>
+<p>Следует отметить, что мне лично TortoiseGit показался не слишком удобным. Возможно, это всего лишь дело привычки, но мне кажется намного удобнее работать с Git из консоли, чем с помощью контекстного меню в Проводнике.</p>
+<h3>Шпаргалка по командам</h3>
+<p>В этом параграфе приведена сухая шпаргалка по командам Git. Я далеко не спец в этой системе контроля версий, так что ошибки в терминологии или еще в чем-то вполне возможны. Если вы видите в этом разделе ошибку, отпишитесь, пожалуйста, в комментариях.</p>
+<p>Создать новый репозиторий:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git init</span> project-name</div></div>
+<p>Если вы планируете клонировать его по ssh с удаленной машины, также скажите:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git config</span> <span class="re5">--bool</span> core.bare <span class="kw2">true</span></div></div>
+<p>&#8230; иначе при git push вы будете получать странные ошибки вроде:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;"><div class="text codecolorer">Refusing to update checked out branch: refs/heads/master<br />
+By default, updating the current branch in a non-bare repository<br />
+is denied, because it will make the index and work tree inconsistent<br />
+with what you pushed, and will require 'git reset --hard' to match<br />
+the work tree to HEAD.</div></div>
+<p>Клонировать репозиторий с удаленной машины:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git clone</span> <span class="kw2">git</span><span class="sy0">@</span>bitbucket.org:afiskon<span class="sy0">/</span>hs-textgen.git</div></div>
+<p>Если хотим пушить один код в несколько репозиториев:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git remote</span> add remotename <span class="kw2">git</span><span class="sy0">@</span>gitlab.example.ru:repo.git</div></div>
+<p>Добавить файл в репозиторий:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git add</span> text.txt</div></div>
+<p>Удалить файл:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git rm</span> text.txt</div></div>
+<p>Текущее состояние репозитория (изменения, неразрешенные конфликты и тп):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git status</span></div></div>
+<p>Сделать коммит:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git commit</span> <span class="re5">-a</span> <span class="re5">-m</span> <span class="st0">&quot;Commit description&quot;</span></div></div>
+<p>Сделать коммит, введя его описание с помощью $EDITOR:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git commit</span> <span class="re5">-a</span></div></div>
+<p>Замержить <em>все ветки</em> локального репозитория на удаленный репозиторий (аналогично вместо origin можно указать и remotename, см выше):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin</div></div>
+<p>Аналогично предыдущему, но делается пуш <em>только ветки master</em>:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin master</div></div>
+<p>Запушить <em>текущую ветку</em>, не вводя целиком ее название:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin HEAD</div></div>
+<p>Замержить все ветки с удаленного репозитория:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git pull</span> origin</div></div>
+<p>Аналогично предыдущему, но накатывается только ветка master:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git pull</span> origin master</div></div>
+<p>Накатить текущую ветку, не вводя ее длинное имя:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git pull</span> origin HEAD</div></div>
+<p>Скачать все ветки с origin, но не мержить их в локальный репозиторий:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git fetch</span> origin</div></div>
+<p>Аналогично предыдущему, но только для одной заданной ветки:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git fetch</span> origin master</div></div>
+<p>Начать работать с веткой some_branch (уже существующей):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git checkout</span> <span class="re5">-b</span> some_branch origin<span class="sy0">/</span>some_branch</div></div>
+<p>Создать новый бранч (ответвится от текущего):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> some_branch</div></div>
+<p>Переключиться на другую ветку (из тех, с которыми уже работаем):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git checkout</span> some_branch</div></div>
+<p>Получаем список веток, с которыми работаем:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> <span class="co0"># звездочкой отмечена текущая ветвь</span></div></div>
+<p>Просмотреть все существующие ветви:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> <span class="re5">-a</span> <span class="co0"># | grep something</span></div></div>
+<p>Замержить some_branch в текущую ветку:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git merge</span> some_branch</div></div>
+<p>Удалить бранч (после мержа):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> <span class="re5">-d</span> some_branch</div></div>
+<p>Просто удалить бранч (тупиковая ветвь):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git branch</span> <span class="re5">-D</span> some_branch</div></div>
+<p>История изменений:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git log</span></div></div>
+<p>История изменений в обратном порядке:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git log</span> <span class="re5">--reverse</span></div></div>
+<p>История конкретного файла:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git log</span> file.txt</div></div>
+<p>Аналогично предыдущему, но с просмотром сделанных изменений:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git log</span> <span class="re5">-p</span> file.txt</div></div>
+<p>История с именами файлов и псевдографическим изображением бранчей:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git log</span> <span class="re5">--stat</span> <span class="re5">--graph</span></div></div>
+<p>Изменения, сделанные в заданном коммите:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git show</span> d8578edf8458ce06fbc5bb76a58c5ca4a58c5ca4</div></div>
+<p>Посмотреть, кем в последний раз правилась каждая строка файла:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git blame</span> file.txt</div></div>
+<p>Удалить бранч из репозитория на сервере:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git push</span> origin :branch-name</div></div>
+<p>Откатиться к конкретному коммиту (хэш смотрим в &#171;git log&#187;):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git reset</span> <span class="re5">--hard</span> d8578edf8458ce06fbc5bb76a58c5ca4a58c5ca4</div></div>
+<p>Аналогично предыдущему, но файлы на диске остаются без изменений:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git reset</span> <span class="re5">--soft</span> d8578edf8458ce06fbc5bb76a58c5ca4a58c5ca4</div></div>
+<p>Попытаться обратить заданный commit:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git revert</span> d8578edf8458ce06fbc5bb76a58c5ca4a58c5ca4</div></div>
+<p>Просмотр изменений (суммарных, а не всех по очереди, как в «git log»):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git diff</span> <span class="co0"># подробности см в &quot;git diff --help&quot;</span></div></div>
+<p>Используем vimdiff в качестве программы для разрешения конфликтов (mergetool) по умолчанию:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git config</span> <span class="re5">--global</span> merge.tool vimdiff</div></div>
+<p>Отключаем диалог &#171;какой mergetool вы хотели бы использовать&#187;:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git config</span> <span class="re5">--global</span> mergetool.prompt <span class="kw2">false</span></div></div>
+<p>Отображаем табы как 4 пробела, например, в «git diff»:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git config</span> <span class="re5">--global</span> core.pager <span class="st_h">'less -x4'</span></div></div>
+<p>Создание <em>глобального</em> <a href="https://git-scm.com/docs/gitignore">файла .gitignore</a>:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git config</span> <span class="re5">--global</span> core.excludesfile ~<span class="sy0">/</span>.gitignore_global</div></div>
+<p>Разрешение конфликтов (когда оные возникают в результате мержа):</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git mergetool</span></div></div>
+<p>Создание тэга:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git tag</span> some_tag <span class="co0"># за тэгом можно указать хэш коммита</span></div></div>
+<p>Удаление untracked files:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git clean</span> <span class="re5">-f</span></div></div>
+<p>«Упаковка» репозитория для увеличения скорости работы с ним:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git gc</span></div></div>
+<p>Иногда требуется создать копию репозитория или перенести его с одной машины на другую. Это делается примерно так:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">mkdir</span> <span class="re5">-p</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>git-copy<br />
+<span class="kw3">cd</span> <span class="sy0">/</span>tmp<span class="sy0">/</span>git-copy<br />
+<span class="kw2">git clone</span> <span class="re5">--bare</span> <span class="kw2">git</span><span class="sy0">@</span>example.com:afiskon<span class="sy0">/</span>cpp-opengl-tutorial1.git<br />
+<span class="kw3">cd</span> cpp-opengl-tutorial1.git<br />
+<span class="kw2">git push</span> <span class="re5">--mirror</span> <span class="kw2">git</span><span class="sy0">@</span>example.com:afiskon<span class="sy0">/</span>cpp-opengl-tutorial2.git</div></div>
+<p>Следует отметить, что Git позволяет использовать короткую запись хэшей. Вместо «d8578edf8458ce06fbc5bb76a58c5ca4a58c5ca4» можно писать «d8578edf» или даже «d857».</p>
+<p><em>Дополнение:</em> Также в 6-м пункте <a href="/mini-notes-issue-9/">Мини-заметок номер 9</a> приводится пример объединения коммитов с помощью <code class="codecolorer bash default"><span class="bash"><span class="kw2">git rebase</span></span></code>, а в 10-м пункте <a href="/mini-notes-issue-11/">Мини-заметок номер 11</a> вы найдете пример объединения двух репозиториев в один без потери истории.</p>
+<h3>Работа с сабмодулями</h3>
+<p>Более подробно сабмодули и зачем они нужны объясняется в заметке <a href="/opengl-simple-project/">Простой кроссплатформенный OpenGL-проект на C++</a>. Здесь упомянем самое главное.</p>
+<p>Добавить сабмодуль:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git submodule</span> add https:<span class="sy0">//</span>github.com<span class="sy0">/</span>glfw<span class="sy0">/</span>glfw glfw</div></div>
+<p>Инициализация сабмодулей:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git submodule</span> init</div></div>
+<p>Обновление сабмодулей, например, если после <code class="codecolorer text default"><span class="text">git pull</span></code> поменялся коммит, на который смотрит сабмодуль:</p>
+<div class="codecolorer-container bash default" style="overflow:auto;white-space:nowrap;"><div class="bash codecolorer"><span class="kw2">git submodule</span> update</div></div>
+<p>Удаление сабмодуля производится так:</p>
+<ol>
+<li>Скажите <code class="codecolorer bash default"><span class="bash"><span class="kw2">git rm</span> <span class="re5">--cached</span> имя_сабмодуля</span></code>;</li>
+<li>Удалите соответствующие строчки из файла .gitmodules;</li>
+<li>Также грохните соответствующую секцию в .git/config;</li>
+<li>Сделайте коммит;</li>
+<li>Удалите файлы сабмодуля;</li>
+<li>Удалите каталог .git/modules/имя_сабмодуля;</li>
+</ol>
+<h3>Дополнительные материалы</h3>
+<p>В качестве источников дополнительной информации я бы рекомендовал следующие:</p>
+<ul>
+<li><a href="http://whygitisbetterthanx.com/">Why Git is Better than X</a>;</li>
+<li><a href="http://habrahabr.ru/blogs/Git/104198/">Хабростатья &#171;Почему Git?&#187;</a>;</li>
+<li><a href="http://habrahabr.ru/blogs/Git/80909/">Книга «Волшебство Git» на русском языке</a>;</li>
+</ul>
+<p>Как обычно, любые замечания, дополнения и вопросы категорически приветствуются. И кстати, с наступающим вас!</p>
+<p><em>Дополнение:</em> <a href="/vcs-practice/">Практика работы с системами контроля версий</a></p>
+<!-- tags begin -->
+
+          <p><em>Метки: <a href="https://eax.me/tag/development/" rel="tag">Разработка</a>.</em></p> 
+
+
+<!-- tags end -->
+
+<!-- subscribe begin -->
+
+<div style="border: 3px dashed #777; padding: 5px 0px 5px 15px;">
+
+<div style="margin-bottom: 3px;"><h4>Понравился пост? Узнайте, как можно <a href="/patreon/" style="color: #f26522;">поддержать развитие этого блога</a>.</h4></div>
+
+<div style="margin: 3px 0px 3px 40px;"><h4>Также подпишитесь на <a href="/feed/">RSS</a>, <a href="/vkontakte/">ВКонтакте</a>, <a href="/twitter/">Twitter</a> или <a href="/telegram/">Telegram</a>.</h4></div>
+
+<div class="clear"></div>
+
+</div>
+<div id="comments">
+<noscript>
+<p style="color: red; text-align: center;"><br />Для отображения комментариев необходимо включить JavaScript!</p>
+</noscript>
+</div>
+
+<!-- subscribe end -->
+
+				</div>
+			</div>
+
+<!-- comments begin -->
+	
+<div id="disqus_thread"></div>
+<!-- DISQUS -->
+<script type="text/javascript"><!--
+  var disqus_domain = 'disqus.com';
+  var disqus_container_id = 'disqus_thread';
+  var disqus_shortname = 'eaxme';
+  var disqus_url = 'https://eax.me/git-commands/';
+  var disqus_identifier = '6003 http://eax.me/?p=6003';
+  var disqus_title = "Моя шпаргалка по работе с Git";
+  (function() {
+      var s = document.createElement('script');
+      s.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+      s.type = 'text/javascript';
+      s.async = true;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(s);
+    })();
+//--></script>
+<!-- / DISQUS -->
+<!-- comments end -->
+
+	
+	</div>
+
+            
+        </div>
+    </div>
+
+<!-- sidebar begin -->
+    <div id="body_right">
+    	<div id="body_right_content">
+            <div id="sidebars">
+                	<div id="sidebar" class="sidebars">
+		<ul>
+		<li id="text-10" class="widget widget_text"><h2 class="widgettitle">Коротко о себе</h2>			<div class="textwidget"><div style="margin-bottom: 6px;"><span class="about">Меня зовут Александр, позывной любительского радио R2AUK. Днем я&nbsp;обычный программист, а&nbsp;ночью превращаюсь в радиолюбителя-коротковолновика. Здесь я&nbsp;пишу об интересующих меня вещах и временами — просто о жизни.</span></div>
+
+<div style="margin-bottom: 6px;"><span class="about">Вы можете следить за обновлениями этого блога с помощью <a href="/feed/">RSS</a>, <a href="/vkontakte/">ВКонтакте</a>, <a href="/twitter/">Twitter</a> или <a href="/telegram/">Telegram</a>. Если вам нравится данный сайт, возможно, вы захотите поддержать его на&nbsp;<a href="/patreon/">Patreon</a>.</span></div> 
+
+<div style="margin-bottom: 6px;"><span class="about">Мой контактный e-mail — <a href="mailto:mail@eax.me">mail@eax.me</a>. Если вы хотите мне написать, прошу предварительно ознакомиться с <a href="/faq/">этим FAQ</a>. Если у вас технический вопрос, просьба адресовать его на форум <a href="/forum/">forum.devzen.ru</a>.</span></div>
+
+<!--
+<div style="padding-left: 16px; padding-bottom: 2px;'">
+
+<a href="/devzen/" target="_blank"><img src="/banners/devzen.png" alt="DevZen Podcast" title="Гиковый подкаст о программировании и IT" width="234" height="60" style="border: 1px solid #0088cc;" /></a>
+
+</div>
+ 
+<div style="padding-left: 16px; padding-bottom: 2px;'">
+
+<a href="/digitalocean/" target="_blank"><img src="/banners/digitalocean.png" alt="DigitalOcean" title="Зарегистрируйся и получи 10$ на счет!" width="234" height="60" style="border: 1px solid #0088cc;" /></a>
+
+</div>
+--></div>
+		</li><li id="search-3" class="widget widget_search"><form method="get" id="searchform" action="https://encrypted.google.com/search">
+<div>
+<input type="hidden" name="as_sitesearch" value="eax.me" />
+<input type="text" id="s" name="as_q" value="" />
+<input type="submit" id="searchsubmit" value="&nbsp;Поиск&nbsp;" />
+</div>
+</form>
+</li><li id="text-14" class="widget widget_text"><h2 class="widgettitle">Популярные заметки</h2>			<div class="textwidget"><ul>
+<li><a href="http://eax.me/git-commands/">Моя шпаргалка по работе с Git</a>, 8290 просмотров за месяц</li>
+<li><a href="http://eax.me/vim-commands/">Моя шпаргалка по работе в Vim</a>, 6797 просмотров за месяц</li>
+<li><a href="http://eax.me/intellij-idea-hotkeys/">Краткая шпаргалка по сочетаниям клавиш в IntelliJ IDEA</a>, 4404 просмотра за месяц</li>
+<li><a href="http://eax.me/postgresql-install/">Начало работы с PostgreSQL</a>, 3064 просмотра за месяц</li>
+<li><a href="http://eax.me/kubernetes/">Быстрое введение в Kubernetes</a>, 2339 просмотров за месяц</li>
+<li><a href="http://eax.me/iptables/">Настройка фаервола с помощью iptables за пять минут</a>, 2281 просмотр за месяц</li>
+<li><a href="http://eax.me/stm32-arduino-ide/">Пишем под микроконтроллеры STM32 в Arduino IDE</a>, 2207 просмотров за месяц</li>
+<li><a href="http://eax.me/assembler-basics/">Шпаргалка по основным инструкциям ассемблера x86/x64</a>, 2131 просмотр за месяц</li>
+<li><a href="http://eax.me/cpp-smart-pointers/">Шпаргалка по использованию умных указателей в C++</a>, 2124 просмотра за месяц</li>
+<li><a href="http://eax.me/database-design/">Как спроектировать схему базы данных</a>, 1545 просмотров за месяц</li>
+<li><a href="http://eax.me/docker/">Зачем нужен Docker и практика работы с ним</a>, 1540 просмотров за месяц</li>
+<li><a href="http://eax.me/prometheus-and-grafana/">Устанавливаем связку из Prometheus и Grafana</a>, 1471 просмотр за месяц</li>
+<li><a href="http://eax.me/cmake/">Основы сборки проектов на С/C++ при помощи CMake</a>, 1459 просмотров за месяц</li>
+<li><a href="http://eax.me/programming-language-learning/">Советы и примеры задач, которые помогут вам в освоении нового языка программирования</a>, 1441 просмотр за месяц</li>
+<li><a href="http://eax.me/python-matplotlib/">Построение диаграмм на Python с помощью Matplotlib</a>, 1384 просмотра за месяц</li>
+<li><a href="http://eax.me/postgresql-replication/">Потоковая репликация в PostgreSQL и пример фейловера</a>, 1358 просмотров за месяц</li>
+<li><a href="http://eax.me/openvpn/">Установки и настройка OpenVPN в Ubuntu Linux за 5 минут</a>, 1272 просмотра за месяц</li>
+<li><a href="http://eax.me/kvm/">Перестаем бояться виртуализации при помощи KVM</a>, 1141 просмотр за месяц</li>
+<li><a href="http://eax.me/python-virtualenv/">Памятка по virtualenv и изолированным проектам на Python</a>, 1127 просмотров за месяц</li>
+<li><a href="http://eax.me/gdb/">Памятка по отладке при помощи GDB</a>, 1111 просмотров за месяц</li>
+</ul></div>
+		</li>                </ul>
+<div class="clear"></div>
+			</div>
+            </div>
+            
+        </div>
+        <div id="body_right_content_end"></div>
+    </div>
+    <div id="body_right_end"></div>
+<!-- sidebar end -->
+
+</div>
+</div>
+
+<!-- footer begin -->
+
+<div id="footer">
+</div>
+	<div id="footer_text">
+
+        <div style="float: left;">
+<p style="font-family: arial; line-height: 1.1; color: #ddd;">Копирование представленных на данном сайте материалов любыми способами не возбраняется. <br /> Указание ссылки на оригинал приветствуется. &copy; 2009&ndash;2020 Записки программиста</p>
+        </div>
+        <div style="float: right;">
+
+
+<script type="text/javascript"><!--
+document.write(
+'<a href="htt'+'ps://www.livein'+'ternet.ru/st'+'at/eax.me/index.html" '+
+'target="_blank"><img src="/files/counter.gif" '+
+'title="Statistics" '+
+'alt="" height="31" width="88" border="0" /></a>' +
+'');
+//--></script>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+<!-- footer end -->
+</div>
+
+
+</body>
+</html>
+<!-- Dynamic page generated in 0.142 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2020-02-29 01:01:53 -->
+
+<!-- super cache -->
